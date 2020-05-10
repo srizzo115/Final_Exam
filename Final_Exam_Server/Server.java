@@ -1,9 +1,8 @@
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -71,16 +70,42 @@ public class Server extends Observable {
     }
 
     class ClientHandler implements Runnable {
-        private  ObjectInputStream reader;
+        private  BufferedReader reader;
         private  ClientObserver writer; // See Canvas. Extends ObjectOutputStream, implements Observer
-        Socket clientSocket;
+        private Socket clientSocket;
+        //private String clientName;
 
         public ClientHandler(Socket clientSocket, ClientObserver writer) {
-			//...
+        	try {
+        		this.clientSocket = clientSocket;
+            	this.writer = writer;
+				reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				System.out.println("created clientHandler");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
 
         public void run() {
-			//...
+			String message;
+			try {
+				System.out.println("trying to read");
+				while (reader.readLine() != null) {
+					message = reader.readLine();
+					System.out.println("got a message:" + message);
+					System.out.println("clientHandler got message:" + message);
+					if (message.startsWith("NewCustomer")) {
+		
+						String clientName = message.substring(12);
+						Customer newCustomer = new Customer(clientName);
+						customers.add(newCustomer);
+						System.out.println("added " + newCustomer);
+					}
+				}
+			} catch (IOException e) {
+			
+				e.printStackTrace();
+			}
         }
     } // end of class ClientHandler
 }

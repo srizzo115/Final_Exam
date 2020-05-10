@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -30,7 +31,8 @@ public class Client extends Application {
 	// I/O streams 
 	ObjectOutputStream toServer = null; 
 	ObjectInputStream fromServer = null;
-
+	PrintWriter writer;
+	
 	//JavaFx
 	private Stage primaryClientStage;
 	private Stage loginStage;
@@ -88,7 +90,8 @@ public class Client extends Application {
 			fromServer = new ObjectInputStream(socket.getInputStream()); 
 
 			// Create an output stream to send data to the server 
-			toServer = new ObjectOutputStream(socket.getOutputStream()); 
+			toServer = new ObjectOutputStream(socket.getOutputStream());
+			writer = new PrintWriter(socket.getOutputStream());
 		} 
 		catch (IOException ex) { 
 			System.out.println("no connection found");
@@ -154,8 +157,11 @@ public class Client extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				clientName = login.getText();
-				
-				
+				System.out.println("client knows name: " + clientName);
+				String message = "NewCustomer " + clientName;
+				writer.println(message);
+				loginStage.hide();
+				primaryClientStage.show();
 			}
 			
 		});
