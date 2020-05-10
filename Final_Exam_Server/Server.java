@@ -1,3 +1,11 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Observable;
+
 /*
  * Author: Vallath Nandakumar and the EE 422C instructors.
  * Data: April 20, 2020
@@ -9,17 +17,30 @@
 public class Server extends Observable {
 
     static Server server;
-
+    private ArrayList<OutputStream> outputStreams;
+    
     public static void main (String [] args) {
         server = new Server();
         server.populateItems();
-        server.SetupNetworking();
+        try {
+			server.SetupNetworking();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
-    private void SetupNetworking() {
-        int port = 5000;
+    private void populateItems() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void SetupNetworking() throws Exception{
+        outputStreams = new ArrayList<OutputStream>();
+		int port = 5000;
         try {
             ServerSocket ss = new ServerSocket(port);
+            System.out.println("ss port up");
             while (true) {
                 Socket clientSocket = ss.accept();
                 ClientObserver writer = new ClientObserver(clientSocket.getOutputStream());
@@ -37,11 +58,11 @@ public class Server extends Observable {
         Socket clientSocket;
 
         public ClientHandler(Socket clientSocket, ClientObserver writer) {
-			...
+			//...
         }
 
         public void run() {
-			...
+			//...
         }
     } // end of class ClientHandler
 }
