@@ -50,6 +50,7 @@ public class Server extends Observable {
     		items.add(st);
     	}
     	System.out.println(items);
+    	br.close();
 	}
 
 	private void SetupNetworking() throws Exception{
@@ -64,6 +65,7 @@ public class Server extends Observable {
                 Thread t = new Thread(new ClientHandler(clientSocket, writer));
                 t.start();
                 addObserver(writer);
+                outputStreams.add(clientSocket.getOutputStream());
                 System.out.println("got a connection");
             }
         } catch (IOException e) {}
@@ -88,11 +90,10 @@ public class Server extends Observable {
 
         public void run() {
 			String message;
-			try {
+        	try {
 				System.out.println("trying to read");
-				while (reader.readLine() != null) {
-					message = reader.readLine();
-					System.out.println("got a message:" + message);
+				while (((message) = reader.readLine()) != null) {
+					
 					System.out.println("clientHandler got message:" + message);
 					if (message.startsWith("NewCustomer")) {
 		

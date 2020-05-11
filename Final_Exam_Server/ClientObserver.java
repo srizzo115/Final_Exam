@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ClientObserver extends ObjectOutputStream implements Observer {
+public class ClientObserver extends PrintWriter implements Observer {
 
 	public ClientObserver(OutputStream out) throws Exception {
 		super(out);
@@ -14,12 +14,7 @@ public class ClientObserver extends ObjectOutputStream implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		this.update(o, arg); //writer.println(arg);
-		try {
-			this.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.println(arg); //writer.println(arg);
+		this.flush();
 	}
 }

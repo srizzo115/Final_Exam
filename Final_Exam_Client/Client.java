@@ -85,13 +85,14 @@ public class Client extends Application {
 			@SuppressWarnings("resource")
 			Socket socket = new Socket("127.0.0.1", 5000); 
 			System.out.println("connection made");
-
-			// Create an input stream to receive data from the server 
-			fromServer = new ObjectInputStream(socket.getInputStream()); 
-
+						
 			// Create an output stream to send data to the server 
 			toServer = new ObjectOutputStream(socket.getOutputStream());
 			writer = new PrintWriter(socket.getOutputStream());
+			
+			// Create an input stream to receive data from the server 
+			fromServer = new ObjectInputStream(socket.getInputStream()); 
+
 		} 
 		catch (IOException ex) { 
 			System.out.println("no connection found");
@@ -112,6 +113,7 @@ public class Client extends Application {
     	ComboBox<String> itemsDropDown = new ComboBox<String>();
 		itemsDropDown.setPromptText("Auction Items");
 		itemsDropDown.getItems().addAll(items);
+		br.close();
 		System.out.println(items);
 		
 		//Highest Bid Label
@@ -150,7 +152,7 @@ public class Client extends Application {
 		Scene clientScene = new Scene(clientGrid);
 		primaryClientStage.setScene(clientScene);
 		//primaryClientStage.show();
-		
+		writer.println("NewCustomer Sam");
 		
 		loginButton.setOnAction(new EventHandler<ActionEvent>() {
 
