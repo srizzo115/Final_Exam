@@ -32,6 +32,7 @@ public class Client extends Application {
 	ObjectOutputStream toServer = null; 
 	ObjectInputStream fromServer = null;
 	PrintWriter writer;
+	Socket clientSocket;
 	
 	//JavaFx
 	private Stage primaryClientStage;
@@ -84,6 +85,7 @@ public class Client extends Application {
 			// Create a socket to connect to the server 
 			@SuppressWarnings("resource")
 			Socket socket = new Socket("127.0.0.1", 5000); 
+			clientSocket = socket;
 			System.out.println("connection made");
 						
 			// Create an output stream to send data to the server 
@@ -152,7 +154,34 @@ public class Client extends Application {
 		Scene clientScene = new Scene(clientGrid);
 		primaryClientStage.setScene(clientScene);
 		//primaryClientStage.show();
-		writer.println("NewCustomer Sam");
+		//writer.println("NewCustomer Sam");
+		
+		guestButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				String message = ("NewCustomer Guest");
+				writer.println(message);
+				loginStage.hide();
+				primaryClientStage.show();
+			}
+			
+		});
+		
+		logOut.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {				
+				primaryClientStage.hide();
+				try {
+					clientSocket.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
 		
 		loginButton.setOnAction(new EventHandler<ActionEvent>() {
 
